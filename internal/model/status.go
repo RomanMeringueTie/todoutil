@@ -14,16 +14,21 @@ var statusName = map[Status]string{
 	InProgress: "InProgress",
 }
 
-var symbolStatus = map[rune]Status{
-	'o': Open,
-	'x': Closed,
-	'*': InProgress,
+var symbolStatus = map[string]Status{
+	"[o]": Open,
+	"[x]": Closed,
+	"[*]": InProgress,
 }
 
 func (status Status) String() string {
 	return statusName[status]
 }
 
-func SymbolToStatus(symbol rune) Status {
-	return SymbolToStatus(symbol)
+func SymbolToStatus(symbol string) (Status, bool) {
+	status, isFind := symbolStatus[symbol]
+	if isFind {
+		return status, true
+	} else {
+		return Open, false
+	}
 }
