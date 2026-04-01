@@ -26,11 +26,8 @@ func getTodoConfig(path string) *TodoConfig {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if strings.HasPrefix(line, "PREFIX=") {
-			prefix = strings.Split(line, "=")[1]
-		} else if strings.HasPrefix(line, "SUFFIX=") {
-			suffix = strings.Split(line, "=")[1]
-		}
+		prefix = getConfigFieldValue(line, "PREFIX")
+		suffix = getConfigFieldValue(line, "SUFFIX")
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -39,4 +36,12 @@ func getTodoConfig(path string) *TodoConfig {
 	}
 
 	return &TodoConfig{prefix: prefix, suffix: suffix}
+}
+
+func getConfigFieldValue(line, field string) string {
+	fieldPrefix := fmt.Sprintf("%s=", field)
+	if strings.HasPrefix(line, fieldPrefix) {
+		return strings.Split(line, "=")[1]
+	}
+	return ""
 }
