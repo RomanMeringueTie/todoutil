@@ -10,23 +10,31 @@ import (
 	"todo/internal/model"
 )
 
-const defaultTodoSuffix = ".todo"
+const (
+	defaultTodoSuffix  = ".todo"
+	todoConfigFilename = ".todoconfig"
+)
 
-func parseDirs(path, suffix string) []model.Todo {
+func parseDirs(path string) []model.Todo {
+	todoConfig := getTodoConfig(todoConfigFilename)
+	if todoConfig == nil {
+		return []model.Todo{}
+	}
+
 	todos := make([]model.Todo, 0)
-	filepath.WalkDir(path, parseDirEntry(&todos, suffix))
+	filepath.WalkDir(path, parseDirEntry(&todos, *todoConfig))
 	return todos
 }
 
-func parseDirEntry(todos *[]model.Todo, suffix string) func(string, fs.DirEntry, error) error {
+func parseDirEntry(todos *[]model.Todo, config TodoConfig) func(string, fs.DirEntry, error) error {
 	return func(path string, dirEntry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
 		if !dirEntry.IsDir() {
-			if strings.HasSuffix(dirEntry.Name(), suffix) || strings.HasSuffix(dirEntry.Name(), defaultTodoSuffix) {
-				parseFile(todos, path)
+			if hasTodoSuffix(dirEntry.Name(), config.suffix) {
+				parseFile(todos, path, config.prefix)
 			}
 		}
 
@@ -34,7 +42,11 @@ func parseDirEntry(todos *[]model.Todo, suffix string) func(string, fs.DirEntry,
 	}
 }
 
-func parseFile(todos *[]model.Todo, path string) error {
+func hasTodoSuffix(filename, suffix string) bool {
+	return strings.HasSuffix(filename, suffix) || strings.HasSuffix(filename, defaultTodoSuffix)
+}
+
+func parseFile(todos *[]model.Todo, path, prefix string) error {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
@@ -43,7 +55,7 @@ func parseFile(todos *[]model.Todo, path string) error {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		todo := parseLine(path, scanner.Text())
+		todo := parseLine(path, scanner.Text(), prefix)
 		if todo != nil {
 			*todos = append(*todos, *todo)
 		}
@@ -56,10 +68,10 @@ func parseFile(todos *[]model.Todo, path string) error {
 	return nil
 }
 
-func parseLine(path, line string) *model.Todo {
-	if strings.Contains(line, "TODO: ") {
-		prefixIndex := strings.Index(line, "TODO: ")
-		lineWithoutPrefix := line[prefixIndex+len("TODO: "):]
+func parseLine(path, line, prefix string) *model.Todo {
+	// TODO: Read suffix and prefix from config file [x]
+	if strings.Contains(line, prefix) {
+		lineWithoutPrefix := eraseTodoPrefix(line, prefix)
 
 		name, status := getTodoNameAndStatus(lineWithoutPrefix)
 		return model.NewTodo(name, status, path)
@@ -68,8 +80,13 @@ func parseLine(path, line string) *model.Todo {
 	return nil
 }
 
+func eraseTodoPrefix(line, prefix string) string {
+	prefixIndex := strings.Index(line, prefix)
+	lineWithoutPrefix := line[prefixIndex+len(prefix):]
+	return lineWithoutPrefix
+}
+
 func getTodoNameAndStatus(line string) (string, model.Status) {
-	// TODO: Replace with regex [*]
 	splittedLine := strings.Split(line, " ")
 	todoLineLastPart := splittedLine[len(splittedLine)-1]
 

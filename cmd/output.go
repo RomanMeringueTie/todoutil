@@ -10,6 +10,7 @@ import (
 func displayTodos(todos []model.Todo) {
 	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 	fmt.Fprintln(writer, "Context\tName\tStatus\t")
+	fmt.Fprintln(writer, "-------\t----\t------\t")
 
 	for _, todo := range todos {
 		displayTodo(writer, todo)

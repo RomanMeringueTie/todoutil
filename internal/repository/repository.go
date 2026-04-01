@@ -12,8 +12,8 @@ type TodoRepositoryImpl struct {
 	todos []model.Todo
 }
 
-func NewTodoRepositoryImpl(todosPath, suffix string) *TodoRepositoryImpl {
-	todos := parseDirs(todosPath, suffix)
+func NewTodoRepositoryImpl(todosPath string) *TodoRepositoryImpl {
+	todos := parseDirs(todosPath)
 
 	return &TodoRepositoryImpl{todos: todos}
 }

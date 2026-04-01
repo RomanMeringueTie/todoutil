@@ -4,6 +4,7 @@ type Todo struct {
 	name    string
 	status  Status
 	context string
+	// Add prioroty
 }
 
 func NewTodo(name string, status Status, context string) *Todo {

@@ -16,7 +16,8 @@ type TodoDiContainerImpl struct {
 }
 
 func NewTodoDiContainerImpl() *TodoDiContainerImpl {
-	repository := repository.NewTodoRepositoryImpl(".", ".go")
+	// TODO: Get from somewhere else
+	repository := repository.NewTodoRepositoryImpl(".")
 	service := service.NewTodoServiceImpl(repository)
 	return &TodoDiContainerImpl{repository: repository, service: service}
 }

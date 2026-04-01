@@ -8,6 +8,7 @@ import (
 type TodoService interface {
 	GetAll() []model.Todo
 	GetInProgress() []model.Todo
+	// Add GetOpen
 }
 
 type TodoServiceImpl struct {
