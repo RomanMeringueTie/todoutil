@@ -1,7 +1,7 @@
 all: todo
 
 todo: internal/*/*.go cmd/*.go
-	go build -o todo cmd/main.go cmd/output.go
+	go build -o todo cmd/main.go
 
 .PHONY: clean
 clean:
@@ -13,5 +13,5 @@ run: todo
 
 .PHONY: test
 test:
-	go test ./...
+	go test ./... -v
 	

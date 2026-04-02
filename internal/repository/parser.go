@@ -15,14 +15,14 @@ const (
 	todoConfigFilename = ".todoconfig"
 )
 
-func parseDirs(path string) []model.Todo {
+func parseDirs() []model.Todo {
 	todoConfig := getTodoConfig(todoConfigFilename)
 	if todoConfig == nil {
 		return []model.Todo{}
 	}
 
 	todos := make([]model.Todo, 0)
-	filepath.WalkDir(path, parseDirEntry(&todos, *todoConfig))
+	filepath.WalkDir(".", parseDirEntry(&todos, *todoConfig))
 	return todos
 }
 

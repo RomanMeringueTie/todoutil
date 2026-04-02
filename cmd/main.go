@@ -2,13 +2,26 @@ package main
 
 import (
 	"todo/internal/di"
+	"todo/internal/model"
+	"todo/internal/presentation"
 )
 
 func main() {
-	// TODO: Read flags
 	diContainer := di.NewTodoDiContainerImpl()
 	service := diContainer.GetService()
-	todos := service.GetAll()
-	// todos := service.GetInProgress()
-	displayTodos(todos)
+	inputFlag := presentation.ParseFlags()
+	var todos []model.Todo
+
+	switch inputFlag {
+	case presentation.All:
+		todos = service.GetAll()
+	case presentation.InProgress:
+		todos = service.GetInProgress()
+	case presentation.Open:
+		todos = service.GetOpen()
+	case presentation.Closed:
+		todos = service.GetClosed()
+	}
+
+	presentation.DisplayTodos(todos)
 }

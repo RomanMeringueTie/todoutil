@@ -8,7 +8,8 @@ import (
 type TodoService interface {
 	GetAll() []model.Todo
 	GetInProgress() []model.Todo
-	// Add GetOpen
+	GetOpen() []model.Todo
+	GetClosed() []model.Todo
 }
 
 type TodoServiceImpl struct {
@@ -24,14 +25,29 @@ func (service *TodoServiceImpl) GetAll() []model.Todo {
 }
 
 func (service *TodoServiceImpl) GetInProgress() []model.Todo {
+	inProgressTodos := service.getTodoWithStatus(model.InProgress)
+	return inProgressTodos
+}
+
+func (service *TodoServiceImpl) GetOpen() []model.Todo {
+	openTodos := service.getTodoWithStatus(model.Open)
+	return openTodos
+}
+
+func (service *TodoServiceImpl) GetClosed() []model.Todo {
+	closedTodos := service.getTodoWithStatus(model.Closed)
+	return closedTodos
+}
+
+func (service *TodoServiceImpl) getTodoWithStatus(status model.Status) []model.Todo {
 	allTodos := service.repository.GetAll()
 
-	inProgressTodos := make([]model.Todo, 0)
+	todosWithStatus := make([]model.Todo, 0)
 	for _, todo := range allTodos {
-		if todo.GetStatus().String() == "InProgress" {
-			inProgressTodos = append(inProgressTodos, todo)
+		if todo.GetStatus() == status {
+			todosWithStatus = append(todosWithStatus, todo)
 		}
 	}
 
-	return inProgressTodos
+	return todosWithStatus
 }

@@ -1,4 +1,4 @@
-package main
+package presentation
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"todo/internal/model"
 )
 
-func displayTodos(todos []model.Todo) {
+func DisplayTodos(todos []model.Todo) {
 	writer := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 	fmt.Fprintln(writer, "Context\tName\tStatus\t")
 	fmt.Fprintln(writer, "-------\t----\t------\t")
