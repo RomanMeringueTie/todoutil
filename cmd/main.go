@@ -4,12 +4,19 @@ import (
 	"todo/internal/di"
 	"todo/internal/model"
 	"todo/internal/presentation"
+	"todo/internal/repository"
 )
 
 func main() {
+	inputFlag := presentation.ParseFlags()
+	if inputFlag == presentation.Init {
+		repository.CreateConfig()
+		return
+	}
+
 	diContainer := di.NewTodoDiContainerImpl()
 	service := diContainer.GetService()
-	inputFlag := presentation.ParseFlags()
+
 	var todos []model.Todo
 
 	switch inputFlag {

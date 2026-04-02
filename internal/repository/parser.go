@@ -11,12 +11,11 @@ import (
 )
 
 const (
-	defaultTodoSuffix  = ".todo"
-	todoConfigFilename = ".todoconfig"
+	defaultTodoSuffix = ".todo"
 )
 
 func parseDirs() []model.Todo {
-	todoConfig := getTodoConfig(todoConfigFilename)
+	todoConfig := getTodoConfig()
 	if todoConfig == nil {
 		return []model.Todo{}
 	}

@@ -1,6 +1,6 @@
 package presentation
 
-// TODO: Add commands (init)
+// TODO: Add commands (init) [*]
 import (
 	"flag"
 	"log"
@@ -13,6 +13,7 @@ const (
 	InProgress
 	Open
 	Closed
+	Init
 )
 
 func ParseFlags() InputFlag {
@@ -22,20 +23,38 @@ func ParseFlags() InputFlag {
 	xFlag := flag.Bool("x", false, "show closed todos")
 
 	flag.Parse()
+	flagsCount := flag.NFlag()
 
-	if flag.NFlag() > 1 {
+	if flagsCount > 1 {
 		log.Fatalf("expected 1 argument (a, *, o, x)")
 	}
+	if flagsCount == 0 {
+		if isInitCommand() {
+			return Init
+		} else {
+			return All
+		}
+	}
 
-	if *aFlag {
+	switch {
+	case *aFlag:
 		return All
-	} else if *ipFlag {
+	case *ipFlag:
 		return InProgress
-	} else if *oFlag {
+	case *oFlag:
 		return Open
-	} else if *xFlag {
+	case *xFlag:
 		return Closed
-	} else {
+	default:
 		return All
+	}
+}
+
+func isInitCommand() bool {
+	commandLineArgs := flag.Args()
+	if len(commandLineArgs) == 1 && commandLineArgs[0] == "init" {
+		return true
+	} else {
+		return false
 	}
 }

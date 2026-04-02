@@ -14,8 +14,10 @@ type TodoConfig struct {
 	suffix string
 }
 
-func getTodoConfig(path string) *TodoConfig {
-	file, err := os.Open(path)
+const todoConfigFilename = ".todoconfig"
+
+func getTodoConfig() *TodoConfig {
+	file, err := os.Open(todoConfigFilename)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			err = fmt.Errorf("Not a todo directory (create .todoconfig)")
@@ -43,4 +45,14 @@ func getTodoConfig(path string) *TodoConfig {
 	}
 
 	return &TodoConfig{prefix: prefix, suffix: suffix}
+}
+
+func CreateConfig() {
+	config, err := os.Create(".todoconfig")
+	if err != nil {
+		log.Fatalf("can't create .todoconfig: %s", err.Error())
+	}
+
+	config.WriteString("PREFIX=\n")
+	config.WriteString("SUFFIX=\n")
 }
