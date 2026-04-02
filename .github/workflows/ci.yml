@@ -17,8 +17,7 @@ jobs:
         run: make
       - name: Test app
         run: make test_CI
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
+      - name: Report tests
+        uses: becheran/go-testreport@main
         with:
-          name: test-results
-          path: TestResults.json
+          input: TestResults.json
