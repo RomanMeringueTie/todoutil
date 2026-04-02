@@ -69,7 +69,6 @@ func parseFile(todos *[]model.Todo, path, prefix string) error {
 }
 
 func parseLine(path, line, prefix string) *model.Todo {
-	// TODO: Read suffix and prefix from config file [x]
 	if strings.Contains(line, prefix) {
 		lineWithoutPrefix := eraseTodoPrefix(line, prefix)
 

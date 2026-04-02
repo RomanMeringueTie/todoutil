@@ -1,10 +1,9 @@
-package service_test
+package service
 
 import (
 	"reflect"
 	"testing"
 	"todo/internal/model"
-	"todo/internal/service"
 )
 
 type TodoRepositoryMock struct {
@@ -27,7 +26,7 @@ var mockRepository = TodoRepositoryMock{
 	todos: mockTodos,
 }
 
-var testableService service.TodoService = service.NewTodoServiceImpl(&mockRepository)
+var testableService TodoService = NewTodoServiceImpl(&mockRepository)
 
 func TestTodoServiceImplGetAll(t *testing.T) {
 	expected := mockTodos
