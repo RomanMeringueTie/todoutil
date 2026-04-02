@@ -50,3 +50,23 @@ func TestTodoServiceImplGetInProgress(t *testing.T) {
 		t.Errorf("expected: %v, actual: %v", expected, actual)
 	}
 }
+
+func TestTodoServiceImplGetOpen(t *testing.T) {
+	expected := []model.Todo{*model.NewTodo("1", model.Open, "global")}
+
+	actual := testableService.GetOpen()
+
+	if !reflect.DeepEqual(expected, actual) {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
+
+func TestTodoServiceImplGetClosed(t *testing.T) {
+	expected := []model.Todo{*model.NewTodo("2", model.Closed, "internal/service.go")}
+
+	actual := testableService.GetClosed()
+
+	if !reflect.DeepEqual(expected, actual) {
+		t.Errorf("expected: %v, actual: %v", expected, actual)
+	}
+}
