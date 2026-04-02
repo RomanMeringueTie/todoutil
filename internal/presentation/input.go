@@ -1,6 +1,5 @@
 package presentation
 
-// TODO: Add commands (init) [*]
 import (
 	"flag"
 	"log"
