@@ -2,6 +2,7 @@ package repository
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -16,6 +17,9 @@ type TodoConfig struct {
 func getTodoConfig(path string) *TodoConfig {
 	file, err := os.Open(path)
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			err = fmt.Errorf("Not a todo directory (create .todoconfig)")
+		}
 		log.Fatal(err)
 	}
 	defer file.Close()
