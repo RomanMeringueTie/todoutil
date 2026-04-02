@@ -17,3 +17,8 @@ jobs:
         run: make
       - name: Test app
         run: make test
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults.json
